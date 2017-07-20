@@ -2,7 +2,7 @@
 This is an example app where a web browser and two express (node.js) services collaborate on an http request. Notably, timing of these requests are recorded into Splunk Enterprise. This allows you to see the how long the whole operation took, as well how much time was spent in each service.
 
 Here's an example of what it looks like
-<img width="972" alt="zipkin screen shot" src="https://cloud.githubusercontent.com/assets/64215/19316259/5a23bd0a-90d3-11e6-9034-c9c3cf26db28.png">
+<img width="972" alt="zipkin screen shot" src="./ZipkinOverview.png">
 
 This example was initially shown at [DevOpsDays Singapore on Oct 8, 2016](https://speakerdeck.com/adriancole/introduction-to-distributed-tracing-and-zipkin-at-devopsdays-singapore). It was ported from similar examples, such as [Spring Boot](https://github.com/openzipkin/sleuth-webmvc-example).
 
