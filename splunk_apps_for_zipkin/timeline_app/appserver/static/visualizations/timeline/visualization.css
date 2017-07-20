@@ -1,0 +1,88 @@
+.splunk-timeline .axis path,
+.splunk-timeline .axis line {
+  fill: none;
+  stroke: #d9dce0;
+  shape-rendering: crispEdges;
+}
+.splunk-timeline .axis text {
+  fill: #555;
+  font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Helvetica;
+  font-size: 12px;
+  line-height: 16px;
+}
+.splunk-timeline .timeline-label {
+  fill: #555;
+  font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Helvetica;
+  font-size: 12px;
+  line-height: 16px;
+}
+.splunk-timeline .modviz-tooltip { 
+  font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Helvetica;
+  
+  position: absolute;
+  z-index: 100;
+  opacity: 1;
+
+  border: 0px;
+  border-radius: 2px;
+
+  padding: 10px;
+
+  pointer-events: none;
+  background: #000000; 
+  color: #ffffff;
+}
+.splunk-timeline .modviz-tooltip .time-span-label{ 
+  color: #ccc;
+}
+
+.splunk-timeline .tooltip-top-left:before {
+  content: '';
+  position: absolute;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid black;
+  left:-8px;
+  top:7px;
+}
+
+.splunk-timeline .tooltip-top-right:before {
+  content: '';
+  position: absolute;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid black;
+  right: -8px;
+  top: 7px;
+}
+
+.splunk-timeline .tooltip-bottom-left:before {
+  content: '';
+  position: absolute;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid black;
+  left:-8px;
+  bottom:7px;
+}
+
+.splunk-timeline .tooltip-bottom-right:before {
+  content: '';
+  position: absolute;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid black;
+  right: -8px;
+  bottom: 7px;
+}
+
+.splunk-timeline circle,
+.splunk-timeline rect:not(.row-green-bar) {
+  cursor: pointer;
+}
+.splunk-timeline {
+  overflow-y:auto;
+}
+.splunk-timeline svg {
+  box-sizing:border-box;
+}

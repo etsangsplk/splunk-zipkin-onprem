@@ -1,0 +1,104 @@
+<form>
+  <label>Zipkin Overview</label>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="time" token="myTime" searchWhenChanged="true">
+      <label>Time Period</label>
+      <default>
+        <earliest>-60m@m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <viz type="jointjs_diagram_app.jointjs_diagram">
+        <title>Transaction Dependency Map</title>
+        <search>
+          <query>source=zipkin  parentId=*
+| spath "annotations{0}.value" output=serviceType
+| spath "annotations{0}.endpoint.serviceName" output=serviceName 
+| eval from = if(serviceType="cs", serviceName, null)
+| eval to   = if(serviceType="sr", serviceName, null)
+| transaction traceId 
+| stats values(to) as to by name, from | where from != ""
+| mvexpand to
+| mvexpand from
+| table from to name</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+      </viz>
+    </panel>
+    <panel>
+      <chart>
+        <title>Transaction Traces (ms)</title>
+        <search>
+          <query>source=zipkin traceId=* 
+| spath path=annotations{0}.timestamp output=start 
+| spath path=annotations{1}.timestamp output=end
+| eval spanDuration_ms = (end - start)/1000
+| stats count(parentId) as Spans,max(spanDuration_ms) as spanDuration_ms by traceId
+| sort spanDuration_ms desc</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">bar</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.overlayFields">Spans</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+        <drilldown>
+          <set token="traceid">$row.traceId$</set>
+        </drilldown>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel depends="$traceid$">
+      <viz type="timeline_app.timeline">
+        <title>Trace Details (ms)</title>
+        <search>
+          <query>source=zipkin traceId=$traceid$
+
+| spath path=annotations{0}.timestamp output=start 
+| spath path=annotations{1}.timestamp output=end
+| spath path="annotations{0}.endpoint.serviceName" output=serviceName  
+| eval serviceName=if(isnotnull(parentId), serviceName, "Overall")
+| eval spanName=if(isnotnull(parentId),"child","parent")
+| eval spanDuration_ms = (end - start)/1000
+| eval start=strftime(start/1000000, "%F %T.%3Q")
+| table start serviceName spanName spanDuration_ms traceId parentId  id* | fields - _raw
+| sort start traceId</query>
+          <earliest>$earliest$</earliest>
+          <latest>$latest$</latest>
+        </search>
+        <option name="timeline_app.timeline.axisTimeFormat">SUBSECONDS</option>
+        <option name="timeline_app.timeline.colorMode">categorical</option>
+        <option name="timeline_app.timeline.maxColor">#DA5C5C</option>
+        <option name="timeline_app.timeline.minColor">#FFE8E8</option>
+        <option name="timeline_app.timeline.numOfBins">6</option>
+        <option name="timeline_app.timeline.tooltipTimeFormat">SUBSECONDS</option>
+        <option name="timeline_app.timeline.useColors">1</option>
+      </viz>
+    </panel>
+  </row>
+</form>

@@ -1,0 +1,9 @@
+[app/install/install_source_checksum]
+version = 6.5.2
+modtime = 1496239123.161035000
+
+[]
+access = read : [ * ], write : [ admin, power ]
+export = system
+version = 6.5.2
+modtime = 1496239222.542640000
