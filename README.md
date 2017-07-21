@@ -1,4 +1,6 @@
 # Basic example showing distributed tracing from a web browser across node.js apps
+This application was forked from the original source at:  https://github.com/openzipkin/zipkin-js-example 
+
 This is an example app where a web browser and two express (node.js) services collaborate on an http request. Notably, timing of these requests are recorded into Splunk Enterprise. This allows you to see the how long the whole operation took, as well how much time was spent in each service.
 
 Here's an example of what it looks like
