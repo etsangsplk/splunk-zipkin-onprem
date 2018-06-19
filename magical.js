@@ -14,11 +14,11 @@ const app = express();
 const zipkinMiddleware = require('zipkin-instrumentation-express').expressMiddleware;
 app.use(zipkinMiddleware({
   tracer,
-  serviceName: '3rdParty' // name of this application
+  serviceName: 'magical' // name of this application
 }));
 
-app.get('/3rdParty', (req, res) => res.send(new Date().toString()));
+app.get('/magical', (req, res) => res.send("<h1>It's not magic, It's <span style='color: #339966;'><b>Splunk &gt;</b></span></h1><br>" + req.query.ts));
 
-app.listen(9001, () => {
-  console.log('3rd Party listening on port 9001!');
+app.listen(9002, () => {
+  console.log('Magical Service listening on port 9002!');
 });

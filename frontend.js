@@ -33,10 +33,10 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-  zipkinRest('http://localhost:9001/3rd')
-    .then(zipkinRest('http://localhost:9000/api'))
-    .then(response => res.send(response.entity))
-    .catch(err => console.error('Error', err.stack));
+  zipkinRest('http://localhost:9000/backend')
+    .then(zipkinRest('http://localhost:9001/3rdParty'))
+      .then(response => res.send(response.entity))
+  .catch(err => console.error('Error', err.stack));
 });
 
 app.listen(8081, () => {

@@ -1,40 +1,29 @@
 /* eslint-env browser */
-const {BatchRecorder} = require('zipkin');
-const {HttpLogger} = require('zipkin-transport-http');
+const {	BatchRecorder } = require('zipkin');
+const { HttpLogger }    = require('zipkin-transport-http');
 
 // ------------------------------------------------------------------------
-//    Zipkin data recorder for Splunk Enterprise or SaaS (Firefawkes)
+//    Zipkin data recorder for Splunk
 // ------------------------------------------------------------------------
-var endpointURL, authToken;
-
-// Are we sending to Splunk Enterprise or Firefawkes?
-var sendToSplunkEnterprise = true;
-
 // Where to send the data
-var Splunk_endpointURL = 'http://splunk-enterprise:8088';
-var	SaaS_endpointURL   = 'https://api.logface.io/v1/events';
+var splunk_protocol  = 'http';
+var splunk_host_port = 'localhost:8088';
+var splunk_hec_token = 'ef640831-775f-466d-afa3-405ea403e12c';
 
-//  Authentication Token   (Splunk Enterprise == HEC Token,   SaaS = userid:pwd)
-//var Splunk_authToken = 'F5F60593-3F95-43B9-8799-4707C84360F4';  
-var Splunk_authToken = '00000000-0000-0000-0000-000000000002';  
-var SaaS_authToken   = '7JQGZLP1BLFPR71RFJ0LW0ZV0:kl+kZNRttZR6s0XiQvQq68MgmfFmMPbBM5eqOwzWAiM';
+// Build the Splunk URL including Basic Authorization  (http://x:<token>@<host>:<port>/services/collector/raw)
+var splunk_URL = splunk_protocol + '://x:' + splunk_hec_token + '@' + splunk_host_port + '/services/collector/raw';
 
-
-// Format the URL and Auth Token for the target platform:
-if (sendToSplunkEnterprise){
-	endpointURL = Splunk_endpointURL + '/services/collector/raw?channel=' + Splunk_authToken;
-	authToken = 'Splunk ' + Splunk_authToken;
-} else {
-	endpointURL = SaaS_endpointURL;
-	authToken = 'Basic ' + new Buffer(SaaS_authToken).toString('base64');
-}
-
+//console.log("Sending traces to: " + splunk_URL );
 const recorder = new BatchRecorder({
   logger: new HttpLogger({
-      endpoint: endpointURL,
-      auth:     authToken
+      endpoint: splunk_URL
    })
 });
 
-
 module.exports.recorder = recorder;
+
+
+//var splunk_protocol  = 'https';
+//var splunk_host_port = 'mattymo.io:8088';
+//var splunk_hec_token = 'a53d0717-4d44-4c3e-9501-e2c660cd4604';
+
