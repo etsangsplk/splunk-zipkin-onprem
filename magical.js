@@ -17,7 +17,7 @@ app.use(zipkinMiddleware({
   serviceName: 'magical' // name of this application
 }));
 
-app.get('/magical', (req, res) => res.send("<h1>It's not magic, It's <span style='color: #339966;'><b>Splunk &gt;</b></span></h1><br>" + req.query.ts));
+app.get('/magical', (req, res) => res.send("<h1>It's not magic, It's <span style='color: #339966;'><b>Splunk &gt;</b></span></h1><br>" + req.query.minute));
 
 app.listen(9002, () => {
   console.log('Magical Service listening on port 9002!');

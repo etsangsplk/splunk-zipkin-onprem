@@ -6,10 +6,10 @@ const { HttpLogger }    = require('zipkin-transport-http');
 //    Zipkin data recorder for Splunk
 // ------------------------------------------------------------------------
 // Where to send the data
+//var splunk_protocol  = 'http';
 var splunk_host_port = 'http://localhost:8088';
-var splunk_hec_token = '00000000-0000-0000-0000-000000000000';
+var splunk_hec_token = '00000000-0000-0000-0000-000000000002';
 
-// Build the Splunk URL including Basic Authorization  (http://x:<token>@<host>:<port>/services/collector/raw)
 var splunk_URL = splunk_host_port + '/services/collector/raw';
 
 //console.log("Sending traces to: " + splunk_URL );
@@ -21,3 +21,4 @@ const recorder = new BatchRecorder({
 });
 
 module.exports.recorder = recorder;
+

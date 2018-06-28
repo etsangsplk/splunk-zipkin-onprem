@@ -26,6 +26,17 @@
   </fieldset>
   <row>
     <panel>
+      <html>
+        <style> 
+          .panel-body.html { color: white; background: #297ba5 !important;  text-align: center } 
+          .html h2 { color:white; background: #297ba5 !important;  text-align: center }
+        </style>
+        <h2>Service Topology Maps</h2>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
       <viz type="jointjs_diagram_app.jointjs_diagram">
         <title>Transaction Dependency Map</title>
         <search base="all_traces">
@@ -77,12 +88,97 @@
   </row>
   <row>
     <panel>
+      <html>
+        <h2>Service Performance Metrics</h2>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Overall Response Time of All Traced Services</title>
       <chart>
-        <title>Transaction Traces (ms)</title>
+        <title>zipkin.service.duration_ms</title>
+        <search>
+          <query>| mstats avg(_value) prestats=true WHERE metric_name="zipkin.service.duration_ms" AND "index"="zipkinmetrics" span=1m
+| timechart avg(_value) as "Avg" span=1m</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+        <option name="charting.axisY.abbreviation">auto</option>
+        <option name="charting.axisY.includeZero">1</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.fieldColors">{"Avg":"#a65c7d"}</option>
+        <option name="charting.gridLinesX.showMajorLines">1</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="displayview">analysis_workspace</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Response Times by Service</title>
+      <chart>
+        <title>zipkin.service.duration_ms by serviceName</title>
+        <search>
+          <query>| mstats avg(_value) prestats=true WHERE metric_name="zipkin.service.duration_ms" AND "index"="zipkinmetrics" span=1m BY "serviceName" 
+| timechart avg(_value) as "Avg" agg=max limit=5 useother=false span=1m BY "serviceName"</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+        <option name="charting.axisY.abbreviation">auto</option>
+        <option name="charting.axisY.includeZero">1</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.fieldColors">{"3rdparty":"#1e93c6","backend":"#f2b827","frontend":"#d6563c","magical":"#6a5c9e","thirdparty":"#31a35f"}</option>
+        <option name="charting.gridLinesX.showMajorLines">1</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="displayview">analysis_workspace</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Request Counts by Service</title>
+      <chart>
+        <title>zipkin.service.count by serviceName</title>
+        <search>
+          <query>| mstats avg(_value) prestats=true WHERE metric_name="zipkin.service.count" AND "index"="zipkinmetrics" span=1m BY "serviceName" 
+| timechart avg(_value) as "Avg" agg=max limit=5 useother=false span=1m BY "serviceName"</query>
+          <earliest>$myTime.earliest$</earliest>
+          <latest>$myTime.latest$</latest>
+        </search>
+        <option name="charting.axisY.abbreviation">auto</option>
+        <option name="charting.axisY.includeZero">1</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.fieldColors">{"3rdparty":"#1e93c6","backend":"#f2b827","frontend":"#d6563c","magical":"#6a5c9e","thirdparty":"#31a35f"}</option>
+        <option name="charting.gridLinesX.showMajorLines">1</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="displayview">analysis_workspace</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <html>
+        <h2>Individual User Traces</h2>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>10 Slowest Transaction Traces (ms)</title>
         <search>
           <query>traceId=* parentId=* *$searchText$* | `format_traces`
 | chart max(duration_ms) as duration_ms over traceId by url 
-| sort duration_ms desc</query>
+| addtotals
+| sort Total desc
+| fields - Total
+| head 10</query>
           <earliest>$myTime.earliest$</earliest>
           <latest>$myTime.latest$</latest>
           <refresh>$refresh_token$</refresh>
@@ -128,6 +224,8 @@
         </center>
       </html>
     </panel>
+  </row>
+  <row>
     <panel depends="$traceid$">
       <viz type="timeline_app.timeline">
         <title>Trace Details (ms) for ID: $traceid$</title>

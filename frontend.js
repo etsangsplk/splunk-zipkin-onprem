@@ -27,7 +27,8 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', [
     'Origin', 'Accept', 'X-Requested-With', 'X-B3-TraceId',
-    'X-B3-ParentSpanId', 'X-B3-SpanId', 'X-B3-Sampled'
+    'X-B3-ParentSpanId', 'X-B3-SpanId', 'X-B3-Sampled',
+    'Content-Type', 'Authorization'
   ].join(', '));
   next();
 });

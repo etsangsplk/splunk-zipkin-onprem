@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 
 //app.get('/api', (req, res) => res.send(new Date().toString()));
 app.get('/backend', (req, res) => {
-  zipkinRest('http://localhost:9002/magical?ts=' + encodeURIComponent(new Date().toString()) )
+  zipkinRest('http://localhost:9002/magical?ts=' + encodeURIComponent(new Date().getMinutes().toString()) )
     .then(response => res.send(response.entity))
   .catch(err => console.error('Error', err.stack));
 });

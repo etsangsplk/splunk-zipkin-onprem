@@ -17,7 +17,7 @@ app.use(zipkinMiddleware({
   serviceName: '3rdParty' // name of this application
 }));
 
-app.get('/3rdParty', (req, res) => res.send(new Date().toString()));
+app.get('/3rdParty', (req, res) => res.send(new Date().getMinutes().toString()));
 
 app.listen(9001, () => {
   console.log('3rd Party listening on port 9001!');
